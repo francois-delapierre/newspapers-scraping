@@ -1,6 +1,8 @@
-<?php require("FPDF/fpdf.php");
+<?php
 
+require("tFPDF/tfpdf.php");
 require("SimpleHTMLDom/simple_html_dom.php");
+
 
 $articles = [];
 
@@ -20,7 +22,7 @@ if(isset($_POST['editeur']) AND isset($_POST['date']) AND isset($_POST['urls']))
 
 //Début
 
-class PDF extends FPDF
+class PDF extends tFPDF
 {
 
   protected $col = 0; // Colonne courante
@@ -111,8 +113,9 @@ function AcceptPageBreak()
 
 function TitreArticle($num, $libelle)
 {
-    // Arial 12
-    $this->SetFont('Arial','B',12);
+  // Add a Unicode font (uses UTF-8)
+    $this->AddFont('AverBold','','AverBold.ttf',true);
+    $this->SetFont('AverBold','',14);
     // Couleur de fond
     $this->SetFillColor(112,173,71);
     // Titre
@@ -151,12 +154,15 @@ function ImageArticle($url_img)
 function CorpsArticle($fichier)
 {
     // Lecture du fichier texte
-    $txt = utf8_decode($fichier);
-    // Times 12
-    $this->SetFont('Times','',12);
-    // Sortie du texte justifié
+    $txt = $fichier;
 
+    // Add a Unicode font (uses UTF-8)
+    $this->AddFont('Aver','','Aver.ttf',true);
+    $this->SetFont('Aver','',11);
+
+    // Sortie du texte justifié
     $this->MultiCell(60,8,$txt);
+
     // Saut de ligne
     $this->Ln();
 
@@ -180,46 +186,35 @@ $pdf->SetAuthor($editeur);
 
 for($x=0;$x<sizeof($articles)-1;$x++)
 {
-
-
   $html = file_get_html($articles[$x]);
-
 
   if( ($html->find('h2[itemprop=headline]')) && ($html->find('main div div img',0)) && ($html->find('div[itemprop=articleBody] p')))
     {
         $title = $html->find('h2[itemprop=headline]');
         $image = $html->find('main div div img',0);
 
-        $article_body = $html->find('div[itemprop=articleBody] p');
+        $titre  = $title[0]->innertext;
+        $titre = nl2br($titre);
+        $titre = strip_tags($titre);
+        $titre = trim($titre);
 
-        $titre  = $title[0]->plaintext."\n";
-        $titre = utf8_decode($titre);
         $img    = "<img src='https://www.gnakrylive.com".$image->src."'/>'";
         $url_img= "https://www.gnakrylive.com".$image->src;
+
         $texte = "";
+        $article_body = $html->find('div[itemprop=articleBody] p');
 
         for($i=0;$i<sizeof($article_body);$i++)
         {
-          /*$ligne_texte_brut = strip_tags($article_body[$i]->plaintext);
-          if($ligne_texte_brut!="&nbsp;")
-          {
-            $ligne_texte = str_replace( array( '<br>', '<br />', "\n", "\r", "\t" ), array('','','','','' ),$ligne_texte_brut );
-            $texte =  $texte.$ligne_texte;
-          }
-          */
-
           $texte = $texte.$article_body[$i]->plaintext;
-
         }
-
-
 
         $pdf->AjouterArticle($x,$titre,$texte,$url_img);
       }
 }
 
 
-$pdf->Output();
+$pdf->Output("I","$nom_date.pdf");
 }
 else {
   echo "Vous n'avez pas renseigné toutes les données du formulaire. Merci de retourner à la page précédente.";
