@@ -20,7 +20,6 @@ if(isset($_POST['editeur']) AND isset($_POST['date']) AND isset($_POST['urls']))
 
 
 
-//Début
 
 class PDF extends tFPDF
 {
