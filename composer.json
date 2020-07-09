@@ -1,0 +1,14 @@
+{
+    "name": "newspapersscraping/app",
+    "type": "project",
+    "require": {
+        "ext-mbstring": "^0.0.0"
+    },
+    "license": "2020",
+    "authors": [
+        {
+            "name": "Francois Delapierre",
+            "email": "francois@delapierre.net"
+        }
+    ]
+}
