@@ -11,17 +11,17 @@ $liste_urls = [];
   </header>
   <h2>GnakryLive</h2>
   <form method="POST" action="generatePDF.php">
-    <label for="editeur">Nom du journal : </label><input type="text" name="editeur" id="editeur" value="GnakryLive"><br />
-    <label for="date">Date de parution : </label><input type="date" name="date" id="date" value="<?php echo date("Y-m-d");?>"><br />
-    <label for="urls">URLs des articles : </label><textarea name="urls" id="urls" cols="100" rows="20" ><?php $urls = $html->find('.nav-stacked li a');
+    <label for="editeur">Nom du journal : </label><input type="text" name="editeur" id="editeur" value="GnakryLive"><br /><br />
+    <label for="date">Date de parution : </label><input type="date" name="date" id="date" value="<?php echo date("Y-m-d");?>"><br /><br />
+    <label for="urls">URLs des articles (par défaut, les 10 plus récents): </label><br><textarea name="urls" id="urls" cols="100" rows="20" ><?php $urls = $html->find('.nav-stacked li a');
     for($x=0;$x<10;$x++)
     {
     array_push($liste_urls,$urls[$x]->href);
     echo "https://www.gnakrylive.com".$urls[$x]->href."\r";
   }
   ?>
-</textarea><br />
-    <input type="submit">
+</textarea><br /><br />
+    <input type="submit" value="Générer le PDF">
   </form>
 
 </body>
