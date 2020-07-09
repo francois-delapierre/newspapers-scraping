@@ -2,7 +2,7 @@
     "name": "newspapersscraping/app",
     "type": "project",
     "require": {
-        "ext-mbstring": "^0.0.0"
+        "ext-mbstring": "^"
     },
     "license": "2020",
     "authors": [
